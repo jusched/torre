@@ -38,11 +38,11 @@ async def search_people(
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
 
     try:
-        # Call our simplified search function directly
+        # Call to the search function directly
         people_results = await perform_torre_people_search(query)
 
         if not people_results:
-            # Return an empty list and a message if no results
+            # Return an empty list and a message if there is no results
             return JSONResponse(
                 status_code=200, content={"message": "No people found.", "results": []}
             )

@@ -18,3 +18,7 @@ function clearResults() {
     messageArea.className = 'message';
 }
 
+// Creates and appends a person card to the results container
+function createPersonCard(person) {
+    
+}

@@ -23,7 +23,7 @@ async def perform_torre_people_search(query: str) -> list:
                 json=payload,
                 timeout=30.0,
             ) as response:
-                response.raise_for_status()  # Check for HTTP errors
+                response.raise_for_status()
 
                 # Process the response stream line by line
                 async for chunk in response.aiter_bytes():
