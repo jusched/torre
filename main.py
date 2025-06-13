@@ -7,20 +7,14 @@ import os
 # Local modules
 from services.torre_services import perform_torre_people_search, get_person_profile
 
+# FastAPI application setup
 app = FastAPI(
     title="Torre AI Challenge API",
     description="Backend API for searching people on Torre.ai",
     version="0.0.1",
 )
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-    "http://127.0.0.1",
-    "http://127.0.0.1:8000",
-    "null",  # Allows requests from file:/// for local development
-]
-
+# CORS configuration to allow requests from the specified frontend deployed URL
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://torre-front.onrender.com"],
@@ -97,6 +91,7 @@ async def get_person_profile_endpoint(
 
 # --- Run the application ---
 if __name__ == "__main__":
+    # Setup for Render deployment
     import uvicorn
 
     port = int(os.getenv("PORT", 8000))

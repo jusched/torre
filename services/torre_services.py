@@ -16,6 +16,9 @@ async def perform_torre_people_search(query: str) -> list:
     payload = {"query": query, "identityType": "person"}
 
     results = []
+
+    # Initialize a buffer to hold incomplete lines and avoid decode errors
+    # This is necessary to handle cases where the stream may split a JSON object across chunks
     buffer = b""
 
     async with httpx.AsyncClient() as client:
@@ -29,17 +32,27 @@ async def perform_torre_people_search(query: str) -> list:
             ) as response:
                 response.raise_for_status()  # Raise an exception for HTTP errors
 
+                # aiter_bytes() allows us to read the response in chunks
                 async for chunk in response.aiter_bytes():
+
+                    # Append the new chunk to the buffer
                     buffer += chunk
 
+                    # Split the buffer into lines
+                    # This will handle cases where the last line may not end with a newline
                     lines = buffer.split(b"\n")
 
                     # Keep any incomplete line in the buffer for the next chunk
                     buffer = (
-                        lines.pop() if lines and not lines[-1].endswith(b"\n") else b""
+                        # If the last line is incomplete, keep it in the buffer, else reset the buffer
+                        lines.pop()
+                        if lines and not lines[-1].endswith(b"\n")
+                        else b""
                     )
 
                     for line_bytes in lines:
+
+                        # Decode each line, ignoring errors to handle malformed UTF-8
                         line_str = line_bytes.decode("utf-8", errors="ignore").strip()
                         if line_str:
                             try:
@@ -75,7 +88,8 @@ async def perform_torre_people_search(query: str) -> list:
 
 async def get_person_profile(username: str) -> dict:
     """
-    Retrieves the genome information for a given username from Torre.ai.
+    Retrieves the genome information for a given username from Torre.AI.
+    Trigger when clicking "View Details" on the frontend.
     """
     TORRE_GENOME_BIO_URL = f"{TORRE_GENOME_BIO_BASE_URL}/{username}"
 

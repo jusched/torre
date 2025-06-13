@@ -5,14 +5,19 @@ const resultsContainer = document.getElementById('resultsContainer');
 const messageArea = document.getElementById('messageArea');
 const profileDetail = document.getElementById('profileDetail');
 
+
+// Deployed backend URL
 const BACKEND_BASE_URL = "https://torre-y6y2.onrender.com";
 
 
+// Function to display messages in the message area for user feedback
 function displayMessage(message, type = 'info') {
     messageArea.textContent = message;
     messageArea.className = `message ${type}`;
 }
 
+
+// Clear previous results and messages
 function clearResults() {
     resultsContainer.innerHTML = '';
     messageArea.textContent = '';
@@ -22,12 +27,14 @@ function clearResults() {
     resultsContainer.style.display = 'grid';
 }
 
+
+// Function to create a person card and append it to the results
 function createPersonCard(personData) {
     const card = document.createElement('div');
     card.className = 'person-card';
 
+    // Save the username for later ID on the profile detail view
     const profileIdentifier = personData.publicId || personData.username || '';
-
     card.dataset.profileId = profileIdentifier;
 
     const name = personData.name || 'N/A';
@@ -40,6 +47,7 @@ function createPersonCard(personData) {
     const buttonClass = isDetailsAvailable ? "view-details-button" : "view-details-button disabled";
     const buttonDisabled = isDetailsAvailable ? "" : "disabled";
 
+    // Create the card content for all names we find
     card.innerHTML = `
         <img src="${imageUrl}" alt="${name}" class="profile-picture">
         <h2>${name}</h2>
@@ -50,6 +58,8 @@ function createPersonCard(personData) {
     resultsContainer.appendChild(card);
 }
 
+
+// Function to display profile details based on the profile identifier
 async function displayProfileDetails(profileIdentifier) {
     profileDetail.innerHTML = '';
     profileDetail.style.display = 'none';
@@ -106,6 +116,8 @@ async function displayProfileDetails(profileIdentifier) {
             <p><a href="https://torre.ai/${profileIdentifier}" target="_blank" rel="noopener noreferrer">View Full Torre.ai Profile</a></p>
         `;
         displayMessage('');
+
+
     } catch (error) {
         console.error('Failed to load profile:', error);
         displayMessage(`Error loading profile: ${error.message}. Please try again.`, 'error');
@@ -114,6 +126,8 @@ async function displayProfileDetails(profileIdentifier) {
     }
 }
 
+
+// Main search function to handle user input and fetch results from the backend
 async function searchPeople() {
     clearResults();
     const query = searchInput.value.trim();
@@ -140,12 +154,14 @@ async function searchPeople() {
 
         if (data.message && data.results && data.results.length === 0) {
             displayMessage(data.message, 'info');
-        } else if (Array.isArray(data) && data.length > 0) {
+        } 
+        else if (Array.isArray(data) && data.length > 0) {
             displayMessage(`Found ${data.length} results.`, 'success');
             data.forEach(person => {
                 createPersonCard(person);
             });
-        } else {
+        } 
+        else {
             displayMessage('No people found for your query or unexpected data format.', 'info');
         }
 
@@ -155,8 +171,9 @@ async function searchPeople() {
     }
 }
 
-searchButton.addEventListener('click', searchPeople);
 
+// Event listeners for search button and input field to trigger search
+searchButton.addEventListener('click', searchPeople);
 searchInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
         searchPeople();
@@ -167,13 +184,18 @@ window.addEventListener('load', () => {
     searchInput.focus();
 });
 
+
+// Event listener for clicking on a person card to view profile details
 resultsContainer.addEventListener('click', (event) => {
+
     if (event.target.classList.contains('view-details-button')) {
         const profileIdentifier = event.target.dataset.profileId;
+
         if (profileIdentifier) {
             displayProfileDetails(profileIdentifier);
             profileDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
+        }
+        else {
             console.warn("No profile identifier found for this card, cannot view details.");
             displayMessage('Cannot view details: identifier missing.', 'error');
         }
