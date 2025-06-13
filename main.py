@@ -1,16 +1,35 @@
 # External imports
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 # Local import for the Torre service function
-from services.torre_services import perform_torre_people_search
+from services.torre_services import torre_people_search
 
 
 app = FastAPI(
     title="Torre AI Challenge API",
     description="Backend API for searching people on Torre.ai",
     version="0.0.1",
+)
+
+# Configuration block
+origins = [
+    "http://localhost",
+    "http://localhost:8080",  # Local dev servers
+    "http://127.0.0.1",
+    "http://127.0.0.1:8000",
+    "null",  # Allows requests from file:///
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # This is the list of origins that are allowed to make requests
+    allow_credentials=True,  # Allow cookies to be included in cross-origin HTTP requests
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
 TORRE_SEARCH_URL = "https://torre.ai/api/entities/_searchStream"
@@ -39,7 +58,7 @@ async def search_people(
 
     try:
         # Call to the search function directly
-        people_results = await perform_torre_people_search(query)
+        people_results = await torre_people_search(query)
 
         if not people_results:
             # Return an empty list and a message if there is no results
