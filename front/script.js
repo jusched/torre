@@ -59,7 +59,7 @@ async function displayProfileDetails(profileIdentifier) {
 
     try {
         // const backendUrl = `http://127.0.0.1:8000/profile/${encodeURIComponent(profileIdentifier)}`;
-        const backendUrl = `<span class="math-inline">\{BACKEND\_BASE\_URL\}/search\-people?query\=</span>{encodeURIComponent(query)}`
+        const backendUrl = `${BACKEND_BASE_URL}/profile/${encodeURIComponent(profileIdentifier)}`;
         const response = await fetch(backendUrl);
 
         if (!response.ok) {
@@ -127,7 +127,7 @@ async function searchPeople() {
 
     try {
         // const backendUrl = `http://127.0.0.1:8000/search-people?query=${encodeURIComponent(query)}`;
-        const backendUrl = `<span class="math-inline">\{BACKEND\_BASE\_URL\}/profile/</span>{encodeURIComponent(profileIdentifier)}`;
+        const backendUrl = `${BACKEND_BASE_URL}/search-people?query=${encodeURIComponent(query)}`;
         const response = await fetch(backendUrl);
 
         if (!response.ok) {
