@@ -5,6 +5,9 @@ const resultsContainer = document.getElementById('resultsContainer');
 const messageArea = document.getElementById('messageArea');
 const profileDetail = document.getElementById('profileDetail');
 
+const BACKEND_BASE_URL = "https://torre-y6y2.onrender.com";
+
+
 function displayMessage(message, type = 'info') {
     messageArea.textContent = message;
     messageArea.className = `message ${type}`;
@@ -55,7 +58,8 @@ async function displayProfileDetails(profileIdentifier) {
     resultsContainer.style.display = 'none';
 
     try {
-        const backendUrl = `http://127.0.0.1:8000/profile/${encodeURIComponent(profileIdentifier)}`;
+        // const backendUrl = `http://127.0.0.1:8000/profile/${encodeURIComponent(profileIdentifier)}`;
+        const backendUrl = `<span class="math-inline">\{BACKEND\_BASE\_URL\}/search\-people?query\=</span>{encodeURIComponent(query)}`
         const response = await fetch(backendUrl);
 
         if (!response.ok) {
@@ -122,7 +126,8 @@ async function searchPeople() {
     displayMessage('Searching...', 'info');
 
     try {
-        const backendUrl = `http://127.0.0.1:8000/search-people?query=${encodeURIComponent(query)}`;
+        // const backendUrl = `http://127.0.0.1:8000/search-people?query=${encodeURIComponent(query)}`;
+        const backendUrl = `<span class="math-inline">\{BACKEND\_BASE\_URL\}/profile/</span>{encodeURIComponent(profileIdentifier)}`;
         const response = await fetch(backendUrl);
 
         if (!response.ok) {
