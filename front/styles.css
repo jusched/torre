@@ -1,144 +1,305 @@
-/* frontend/style.css */
+:root {
+    --torre-grey: #27292d;
+    --torre-yellow: rgba(0, 188, 212, 1);
+    --text-on-dark: #ffffff;
+    --text-on-light: #333;
+    --card-background: #202020;
+    --card-border: #e8e8e8;
+    --section-separator: #ccc;
+}
+
+html,
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #c3f7e5;
-    color: #1b1818;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    /* Align items to the top */
+    height: 100%;
+    width: 100%;
     margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: Arial, sans-serif;
     padding: 20px;
-    box-sizing: border-box;
-    /* Include padding in element's total width/height */
+    background-color: var(--torre-grey);
+    color: var(--text-on-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .container {
-    background-color: #ffffff;
-    padding: 28px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
     width: 100%;
-    max-width: 700px;
-    /* Limit container width */
-    text-align: center;
+    box-sizing: border-box;
 }
 
 h1 {
-    color: #2c3e50;
-    margin-bottom: 24px;
+    text-align: center;
+    color: var(--torre-yellow);
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .search-section {
     display: flex;
-    justify-content: center;
-    gap: 12px;
-    /* Space between input and button */
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: rgb(46, 45, 45);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #searchInput {
-    padding: 12px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
     flex-grow: 1;
-    /* Allow input to take available space */
-    max-width: 400px;
-    font-size: 16px;
+    padding: 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    font-size: 1em;
+    color: whitesmoke;
+    background-color: var(--card-background);
+}
+
+#searchInput::placeholder {
+    color: #999;
 }
 
 #searchButton {
-    padding: 12px 24px;
-    background-color: #3498db;
-    /* A nice blue */
-    color: white;
+    padding: 12px 20px;
+    background-color: var(--torre-yellow);
+    color: var(--text-on-light);
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s ease;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 #searchButton:hover {
-    background-color: #2980b9;
-    /* Darker blue on hover */
+    background-color: #e0e33e;
+    transform: translateY(-1px);
 }
 
 .message {
-    margin-top: 16px;
-    font-size: 1.1em;
-    color: #555;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-on-light);
 }
 
-.results-container {
-    margin-top: 24px;
+.message.info {
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+.message.success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+#resultsContainer {
     display: grid;
-    /* Use CSS Grid for layout */
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    /* Responsive columns */
-    gap: 20px;
-    /* Space between grid items */
+    gap: 25px;
+    padding: 20px 0;
 }
 
 .person-card {
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
     padding: 20px;
-    text-align: left;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .person-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 15px auto;
+    border: 2px solid var(--torre-grey);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .person-card h2 {
-    color: #34495e;
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.4em;
-}
-
-.person-card p {
-    margin-bottom: 8px;
-    line-height: 1.5;
+    font-size: 1.5em;
+    margin-bottom: 5px;
 }
 
 .person-card .professional-headline {
-    font-style: italic;
-    color: #7f8c8d;
     font-size: 0.95em;
-    margin-bottom: 16px;
+    color: #929292;
+    margin-bottom: 15px;
 }
 
-.person-card .skills {
+.person-card p {
     font-size: 0.9em;
-    color: #666;
+    color: #777;
+    margin-bottom: 10px;
 }
 
 .person-card a {
-    color: #3498db;
+    color: var(--torre-yellow);
     text-decoration: none;
     font-weight: bold;
+    transition: color 0.2s ease;
 }
 
 .person-card a:hover {
     text-decoration: underline;
+    color: #aaadb1;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .search-section {
-        flex-direction: column;
-        /* Stack input and button on small screens */
+.view-details-button {
+    padding: 10px 15px;
+    background-color: var(--torre-yellow);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    align-self: center;
+}
+
+.view-details-button:hover {
+    background-color: #c5c73b;
+    transform: translateY(-1px);
+}
+
+.view-details-button.disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#profileDetail {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 25px;
+    margin: 30px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+}
+
+.profile-detail-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 15px auto 25px auto;
+    border: 3px solid var(--torre-yellow);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+#profileDetail h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--section-separator);
+    padding-bottom: 10px;
+}
+
+#profileDetail p {
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+
+.section-title {
+    font-size: 1.4em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed var(--section-separator);
+}
+
+#profileDetail .experience-item,
+#profileDetail .education-item {
+    background-color: #2c2929;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#profileDetail .experience-item h3,
+#profileDetail .education-item h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+#profileDetail .experience-item p,
+#profileDetail .education-item p {
+    font-size: 0.95em;
+    color: #c2c2c2;
+    margin-bottom: 5px;
+}
+
+#profileDetail a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#profileDetail a:hover {
+    text-decoration: underline;
+    color: #5a5f64;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
     }
 
-    #searchInput,
+    .search-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+
     #searchButton {
-        max-width: none;
-        /* Remove max-width on smaller screens */
+        width: 100%;
+    }
+
+    #resultsContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .person-card {
+        margin: 0 auto;
+        width: 95%;
+    }
+
+    #profileDetail {
+        margin: 20px 10px;
+        padding: 20px;
     }
 }

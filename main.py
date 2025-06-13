@@ -1,12 +1,11 @@
-# External imports
+# External modules
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-# Local import for the Torre service function
-from services.torre_services import torre_people_search
-
+# Local modules
+from services.torre_services import perform_torre_people_search, get_person_profile
 
 app = FastAPI(
     title="Torre AI Challenge API",
@@ -14,68 +13,88 @@ app = FastAPI(
     version="0.0.1",
 )
 
-# Configuration block
 origins = [
     "http://localhost",
-    "http://localhost:8080",  # Local dev servers
+    "http://localhost:8080",
     "http://127.0.0.1",
     "http://127.0.0.1:8000",
-    "null",  # Allows requests from file:///
-    "*",
+    "null",  # Allows requests from file:/// for local development
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # This is the list of origins that are allowed to make requests
-    allow_credentials=True,  # Allow cookies to be included in cross-origin HTTP requests
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-TORRE_SEARCH_URL = "https://torre.ai/api/entities/_searchStream"
 
-
+# * --- FastAPI Endpoints ---
 @app.get("/")
 async def read_root():
     """
-    A root endpoint to confirm the API is running.
+    A simple root endpoint to confirm the API is running.
     """
-    return {"message": "Root working"}
+    return {"message": "Torre AI Test working!"}
 
 
-@app.get("/search-people")  # Changed path for clarity
+@app.get("/search-people")
 async def search_people(
     query: str = Query(
-        ..., min_length=2, description="The name or keyword to search in Torre."
+        ..., min_length=2, description="The name or keyword to search for people."
     )
 ):
     """
     Searches for people on Torre.ai based on a given query.
     Returns a list of matching person profiles.
     """
-    if not query.strip():  # Basic validation
+    if not query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
 
     try:
-        # Call to the search function directly
-        people_results = await torre_people_search(query)
+        # Call the service function to perform the search
+        people_results = await perform_torre_people_search(query)
 
         if not people_results:
-            # Return an empty list and a message if there is no results
             return JSONResponse(
                 status_code=200, content={"message": "No people found.", "results": []}
             )
 
-        # Return the results directly
         return people_results
+    except HTTPException:
+        # Re-raise HTTPExceptions from the service layer directly
+        raise
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"An unexpected error occurred in search_people endpoint: {e}")
         raise HTTPException(
             status_code=500,
             detail="Failed to retrieve search results due to an internal error.",
         )
 
 
-# -- Run the application --
+@app.get("/profile/{username}")
+async def get_person_profile_endpoint(
+    username: str,
+):
+    """
+    Retrieves the genome information for a given username from Torre.ai.
+    """
+    try:
+        # Call the service function to get the profile
+        profile_data = await get_person_profile(username)
+        return profile_data
+    except HTTPException:
+        # Raise HTTPExceptions from the service layer directly
+        raise
+    except Exception as e:
+        print(f"An unexpected error occurred in get_person_profile_endpoint: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to retrieve profile details due to an internal error.",
+        )
+
+
+# --- Run the application ---
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
