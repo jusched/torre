@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+import os
 
 # Local modules
 from services.torre_services import perform_torre_people_search, get_person_profile
@@ -97,4 +97,8 @@ async def get_person_profile_endpoint(
 
 # --- Run the application ---
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import uvicorn
+
+    port = int(os.getenv("PORT", 8000))
+
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
